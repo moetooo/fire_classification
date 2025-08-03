@@ -88,4 +88,38 @@ Each satellite provides multiple daily thermal observations for mid-latitude reg
   - Visualized the distribution of the `confidence` feature, identifying bimodal patterns.
 - Noted an imbalance in fire type labels, which may impact model performance in later stages.
 
+## Week 2 – Completed 
+
+**Highlights:**
+
+- Created new time-based features from the timestamp such as:
+  - `Month` of detection  
+  - `Day of the week`  
+  - `Hour` of the day  
+- Visualized seasonal and hourly trends in fire activity across regions.
+- Detected and removed extreme values using the **Interquartile Range (IQR)** method.
+- Applied **One-Hot Encoding** to handle categorical variables effectively.
+- Standardized numerical columns using `StandardScaler` for uniform feature scaling.
+- Addressed data imbalance using **SMOTE** (Synthetic Minority Over-sampling Technique) to improve model generalization.
+
+---
+
+## Week 3 – Completed
+
+**Highlights:**
+
+- Split the dataset into training and test sets (e.g., 80-20 split).
+- Trained and tested several classification models:
+  - **Logistic Regression**
+  - **K-Nearest Neighbors (KNN)**
+  - **Decision Tree**
+  - **Random Forest**
+- Evaluated each model using:
+  - **Accuracy**
+  - **Precision**
+  - **Recall**
+  - **F1-score**
+- Finalized **Random Forest** as the best-performing model with ~97.78% accuracy.
+- Exported the trained model and preprocessor using `joblib` for deployment.
+- Built an interactive prediction app using **Streamlit** to input fire data and display predicted fire categories in real-time.
 
