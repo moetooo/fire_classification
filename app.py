@@ -1,43 +1,55 @@
 import streamlit as st
+import pandas as pd
 import numpy as np
 import joblib
+import pickle
 
-# Load model and scaler
-model = joblib.load("best_fire_detection_model.pkl")
-scaler = joblib.load("scaler.pkl")
+# Configure layout to prevent scrolling
+st.set_page_config(page_title="Fire Type Prediction", layout="centered")
 
-# Set page title
-st.set_page_config(page_title="Fire Type Classifier", layout="centered")
+# Load model and encoders
+model = joblib.load('fire_type_model.pkl')
+with open('label_encoders.pkl', 'rb') as f:
+    label_encoders = pickle.load(f)
 
-# App title and info
-st.title("Fire Type Classification")
-st.markdown("Predict fire type based on MODIS satellite readings.")
+# App Title
+st.title("🔥 Fire Type Prediction")
 
-# User input fields for 6 features
-brightness = st.number_input("Brightness", value=300.0)
-bright_t31 = st.number_input("Brightness T31", value=290.0)
-frp = st.number_input("Fire Radiative Power (FRP)", value=15.0)
-scan = st.number_input("Scan", value=1.0)
-track = st.number_input("Track", value=1.0)
-confidence = st.selectbox("Confidence Level", ["low", "nominal", "high"])
+st.markdown("Fill the inputs to predict the **fire type** based on MODIS data.")
 
-# Map confidence to numeric
-confidence_map = {"low": 0, "nominal": 1, "high": 2}
-confidence_val = confidence_map[confidence]
+# Two-column layout for compact view
+col1, col2 = st.columns(2)
 
-# Combine and scale input
-input_data = np.array([[brightness, bright_t31, frp, scan, track, confidence_val]])
-scaled_input = scaler.transform(input_data)
+with col1:
+    latitude = st.number_input("Latitude", format="%.4f")
+    longitude = st.number_input("Longitude", format="%.4f")
+    brightness = st.number_input("Brightness")
+    scan = st.number_input("Scan")
+    track = st.number_input("Track")
+    acq_time = st.number_input("Acquisition Time", step=1)
 
-# Predict and display
-if st.button("Predict Fire Type"):
-    prediction = model.predict(scaled_input)[0]
+with col2:
+    satellite = st.selectbox("Satellite", label_encoders['satellite'].classes_)
+    instrument = st.selectbox("Instrument", label_encoders['instrument'].classes_)
+    confidence = st.slider("Confidence", 0, 100, step=1)
+    bright_t31 = st.number_input("Brightness T31")
+    frp = st.number_input("Fire Radiative Power")
+    daynight = st.selectbox("Day/Night", label_encoders['daynight'].classes_)
 
-    fire_types = {
-        0: "Vegetation Fire",
-        2: "Other Static Land Source",
-        3: "Offshore Fire"
-    }
+st.markdown("---")
 
-    result = fire_types.get(prediction, "Unknown")
-    st.success(f"**Predicted Fire Type:** {result}")
+# Predict Button
+if st.button("🚀 Predict Fire Type"):
+    # Encode categorical fields
+    satellite_encoded = label_encoders['satellite'].transform([satellite])[0]
+    instrument_encoded = label_encoders['instrument'].transform([instrument])[0]
+    daynight_encoded = label_encoders['daynight'].transform([daynight])[0]
+
+    # Form input for prediction
+    input_data = np.array([[latitude, longitude, brightness, scan, track,
+                            acq_time, satellite_encoded, instrument_encoded,
+                            confidence, bright_t31, frp, daynight_encoded]])
+
+    # Predict
+    prediction = model.predict(input_data)[0]
+    st.success(f"🔥 **Predicted Fire Type: {prediction}**")

@@ -70,6 +70,8 @@ Each satellite provides multiple daily thermal observations for mid-latitude reg
 
 ---
 
+
+
 # Progress Tracker
 
 ## Week 1 – Completed
@@ -119,7 +121,32 @@ Each satellite provides multiple daily thermal observations for mid-latitude reg
   - **Precision**
   - **Recall**
   - **F1-score**
-- Finalized **Random Forest** as the best-performing model with ~97.78% accuracy.
+- Finalized **Random Forest** as the best-performing model with ~98% accuracy.
 - Exported the trained model and preprocessor using `joblib` for deployment.
 - Built an interactive prediction app using **Streamlit** to input fire data and display predicted fire categories in real-time.
 
+## 🛠️ Tools & Technologies
+
+- **Language**: Python 3.11  
+- **Modeling**: Scikit-learn (Random Forest Classifier)  
+- **Interface**: Streamlit  
+- **Libraries**: `pandas`, `numpy`, `joblib`, `pickle`  
+- **IDE**: Jupyter Notebook, VS Code  
+
+---
+
+## 📁 Files Included
+
+- `app.py` – Streamlit web app  
+- `fire_type_model.pkl` – Trained classification model  
+- `label_encoders.pkl` – Encoded objects for categorical fields  
+- `requirements.txt` – Python dependencies  
+
+---
+
+## 📦 Installation
+
+1. **Clone the repository**  
+```bash
+git clone https://github.com/moetooo/fire-type-prediction.git
+cd fire-type-prediction
