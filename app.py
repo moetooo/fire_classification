@@ -52,4 +52,25 @@ if st.button("🚀 Predict Fire Type"):
 
     # Predict
     prediction = model.predict(input_data)[0]
-    st.success(f"🔥 **Predicted Fire Type: {prediction}**")
+    
+    # Map predictions to human-readable names
+    fire_type_mapping = {
+        0: "Presumed Vegetation Fire 🌲",
+        1: "Active Volcano 🌋",
+        2: "Other Static Land Source 🏭",
+        3: "Offshore 🌊"
+    }
+    
+    # Map predictions to one-liner descriptions
+    description_mapping = {
+        0: "Likely a wildfire, controlled burn, or agricultural activity like crop residue burning.",
+        1: "Thermal anomaly caused by an erupting volcano or geothermal vents.",
+        2: "Persistent heat from stationary industrial facilities like steel mills or power plants.",
+        3: "Thermal anomaly detected over water, such as gas flaring on offshore oil rigs."
+    }
+    
+    human_readable_type = fire_type_mapping.get(prediction, f"Unknown Type ({prediction})")
+    description = description_mapping.get(prediction, "Description missing.")
+    
+    st.success(f"🔥 **Predicted Fire Type: {human_readable_type}**")
+    st.info(f"💡 **What this means:** {description}")
